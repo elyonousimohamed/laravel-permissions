@@ -1,10 +1,12 @@
 <?php
 return [
     'permissions' => [
-        'products' => 'التحكم بالإعدادات العامة',
-        'tags' => 'التحكم بالعلامات',
-        'categories' => 'التحكم بالأقسام',
-        'brands' => 'التحكم بالمركات',
-        'options' => 'التحكم بخصائص المنتج',
+        'roles.index' => 'get roles',
+        'roles.show' => 'get role',
+        'roles.create' => 'create role',
+        'roles.store' => 'store role',
+        'roles.edit' => 'edit role',
+        'roles.update' => 'update role',
+        'roles.destroy' => 'delete role'
     ]
 ];

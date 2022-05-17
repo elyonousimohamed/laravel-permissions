@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Models\Role;
-use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Redirect;
 
@@ -27,13 +26,7 @@ class RoleController extends Controller
      */
     public function create()
     {
-        $permissions = [
-            'create',
-            'edit',
-            'view',
-            'delete'
-        ];
-        return view('roles.create', compact('permissions'));
+        return view('roles.create');
     }
 
     /**
@@ -46,7 +39,7 @@ class RoleController extends Controller
     {
         $validated = $request->validate([
             'name' => ['required', "string"],
-            'permissions' => ["required"],
+            'permissions' => ["required", "array", "min:1"],
         ]);
 
         $input['name'] = $request->name;
@@ -81,17 +74,7 @@ class RoleController extends Controller
      */
     public function edit(Role $role)
     {
-        // $this->routes[] = [
-        //     "route" => "offers.edit",
-        //     "current" => "offers.edit",
-        //     "params" => $offer->id,
-        //     "name" => "edit",
-        // ];
-        // $offer->cover = $this->getImageS3($offer->cover);
-        // return Inertia::render('Offers/Edit', [
-        //     'routes' => $this->routes,
-        //     'offer' => $offer,
-        // ]);
+        return view('roles.edit', compact(['role']));
     }
 
     /**
@@ -103,32 +86,22 @@ class RoleController extends Controller
      */
     public function update(Request $request, Role $role)
     {
-        // $validated = $request->validate([
-        //     'button_url' => ['required', "string"],
-        //     'cover' => ["required", "image", "mimes:jpeg,png,jpg,webp", "max:2048"],
-        // ]);
+        $validated = $request->validate([
+            'name' => ['required', "string"],
+            'permissions' => ["required", "array", "min:1"],
+        ]);
 
-        // $offer->update([
-        //     'title' => [
-        //         'ar' => $request->title_ar,
-        //         'fr' => $request->title_fr,
-        //     ],
-        //     'subtitle' => [
-        //         'ar' => $request->subtitle_ar,
-        //         'fr' => $request->subtitle_fr,
-        //     ],
-        //     'button_text' => [
-        //         'ar' => $request->button_text_ar,
-        //         'fr' => $request->button_text_fr,
-        //     ],
-        //     'button_url' => $request->button_url,
-        //     'cover' => str_contains($request->cover, 'https://madinashop.s3.eu-west-3.amazonaws.com') ? $offer->cover : $this->saveImageS3('offers-cover', $request, 'cover'),
-        //     'type' => $request->type,
-        //     'active' => $request->active,
-        //     'location' => $request->location
-        // ]);
+        $permissions = [];
+        foreach ($request->permissions as $value) {
+            $permissions[] = $value;
+        }
 
-        // return Redirect::route('offers.index');
+        $role->update([
+            'name' => $request->name,
+            'permissions' => $permissions
+        ]);
+
+        return Redirect::route('roles.index');
     }
 
     /**

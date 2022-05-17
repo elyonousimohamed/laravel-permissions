@@ -28,8 +28,10 @@
                                         placeholder="Search for items">
                                 </div>
                             </div>
-                            <a href="{{ route('roles.create') }}"
-                                class="font-bold text-blue-600 dark:text-blue-500 hover:underline">Create</a>
+                            @can('roles.create')
+                                <a href="{{ route('roles.create') }}"
+                                    class="font-bold text-blue-600 dark:text-blue-500 hover:underline">Create</a>
+                            @endcan
                         </div>
                         <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                             <thead
@@ -51,28 +53,37 @@
                                     <tr
                                         class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                         <th scope="row"
-                                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap">
+                                            class="px-6 py-4 font-medium text-gray-900 dark:text-white whitespace-nowrap capitalize">
                                             {{ $item->name }}
                                         </th>
                                         <td class="px-6 py-4">
                                             @foreach (json_decode($item->permissions) as $permission)
-                                                <span class="p-1 dark:bg-gray-500 dark:text-gray-300 rounded">{{ $permission }}</span>
+                                                <span
+                                                    class="p-1 dark:bg-gray-500 dark:text-gray-300 rounded capitalize">{{ $permission }}</span>
                                             @endforeach
                                         </td>
                                         <td class="px-6 py-4 text-right flex justify-end gap-2">
-                                            <a href="{{ route('roles.show', $item) }}"
-                                                class="font-bold text-blue-600 dark:text-blue-500 hover:underline">{{ __('View') }}</a>
-                                            <a href="{{ route('roles.edit', $item) }}"
-                                                class="font-bold text-green-600 dark:text-green-500 hover:underline">{{ __('Edit') }}</a>
-                                            <form method="POST" action="{{ route('roles.destroy', $item->id) }}"
-                                                class="m-0 p-0">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button onclick="return confirm('are you')"
-                                                    class="font-bold text-red-600 dark:text-red-500 hover:underline">
-                                                    delete
-                                                </button>
-                                            </form>
+                                            @can('roles.show')
+                                                <a href="{{ route('roles.show', $item) }}"
+                                                    class="font-bold text-blue-600 dark:text-blue-500 hover:underline capitalize">{{ __('view') }}</a>
+                                            @endcan
+
+                                            @can('roles.edit')
+                                                <a href="{{ route('roles.edit', $item) }}"
+                                                    class="font-bold text-green-600 dark:text-green-500 hover:underline capitalize">{{ __('edit') }}</a>
+                                            @endcan
+
+                                            @can('roles.destroy')
+                                                <form method="POST" action="{{ route('roles.destroy', $item->id) }}"
+                                                    class="m-0 p-0">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button onclick="return confirm('are you sure to delete this role')"
+                                                        class="font-bold text-red-600 dark:text-red-500 hover:underline capitalize">
+                                                        {{ __('delete') }}
+                                                    </button>
+                                                </form>
+                                            @endcan
                                         </td>
                                     </tr>
                                 @endforeach
