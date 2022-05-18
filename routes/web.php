@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +23,7 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth'])->name('dashboard');
 
-Route::prefix('roles')->middleware(['auth', 'verified'])->group(function () {
-    Route::get('', [RoleController::class, 'index'])->name('roles.index')->middleware(['can:roles.index']);
-    Route::get('show/{role}', [RoleController::class, 'show'])->name('roles.show')->middleware(['can:roles.show']);
-    Route::get('create', [RoleController::class, 'create'])->name('roles.create')->middleware(['can:roles.create']);
-    Route::post('store', [RoleController::class, 'store'])->name('roles.store')->middleware(['can:roles.store']);
-    Route::get('{role}/edit', [RoleController::class, 'edit'])->name('roles.edit')->middleware(['can:roles.edit']);
-    Route::put('update/{role}', [RoleController::class, 'update'])->name('roles.update')->middleware(['can:roles.update']);
-    Route::delete('destroy/{role}', [RoleController::class, 'destroy'])->name('roles.destroy')->middleware(['can:roles.delete']);
-});
+Route::middleware(['auth', 'verified'])->resource('roles', RoleController::class);
+Route::middleware(['auth', 'verified'])->resource('users', UserController::class);
 
 require __DIR__ . '/auth.php';

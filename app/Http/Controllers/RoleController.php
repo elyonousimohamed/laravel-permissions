@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\Redirect;
 
 class RoleController extends Controller
 {
+    public function __construct()
+    {
+        $this->middleware('can:roles.index')->only(['index']);
+        $this->middleware('can:roles.show')->only(['show']);
+        $this->middleware('can:roles.create')->only(['create']);
+        $this->middleware('can:roles.store')->only(['store']);
+        $this->middleware('can:roles.edit')->only(['edit']);
+        $this->middleware('can:roles.update')->only(['update']);
+        $this->middleware('can:roles.destroy')->only(['destroy']);
+    }
+
     /**
      * Display a listing of the resource.
      *
